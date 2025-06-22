@@ -18,13 +18,11 @@ public class DeleteJobTest {
     JavascriptExecutor js;
     String baseUrl = "http://localhost/Product%20Filter%20And%20Search/";
 
-    // Selected job info for verification
     private String selectedJobTitle;
     private String selectedJobCompany;
     private String selectedJobLocation;
     private WebElement selectedCard;
 
-    // BeforeAll
     public static void main(String[] args) {
         DeleteJobTest test = new DeleteJobTest();
         test.setup();
@@ -32,7 +30,6 @@ public class DeleteJobTest {
         test.teardown();
     }
 
-    // BeforeEach
     public void setup() {
         System.setProperty("webdriver.chrome.driver", "C:\\All Files\\College Files\\03. Sem 4 - Germany\\Software Testing\\Selenium WebDriver\\chromedriver.exe");
         driver = new ChromeDriver();
@@ -42,13 +39,12 @@ public class DeleteJobTest {
         js = (JavascriptExecutor) driver;
     }
 
-    // Test
     public void testJobDeletion() {
         try {
             System.out.println("---------- STARTING JOB DELETION TEST ----------");
 
             driver.get(baseUrl + "index.html");
-            Thread.sleep(3000);
+            Thread.sleep(1500);
 
             List<WebElement> jobCards = driver.findElements(By.cssSelector("div.card:not(.add-job-card)"));
             if (jobCards.isEmpty()) {
@@ -70,14 +66,14 @@ public class DeleteJobTest {
             System.out.println("Location: " + selectedJobLocation);
 
             js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", selectedCard);
-            Thread.sleep(3000);
+            Thread.sleep(1500);
 
             actions.moveToElement(selectedCard).pause(1000).perform();
-            Thread.sleep(3000);
+            Thread.sleep(1500);
 
             WebElement deleteButton = selectedCard.findElement(By.cssSelector(".delete-btn"));
             deleteButton.click();
-            Thread.sleep(3000);
+            Thread.sleep(1500);
 
             testModalOption("close", "X Button");
             testModalOption("cancel", "Cancel Button");
@@ -91,7 +87,6 @@ public class DeleteJobTest {
         }
     }
 
-    // Helper Test Method
     private void testModalOption(String option, String optionLabel) throws InterruptedException {
         System.out.println("\n--- Testing modal option: " + optionLabel + " ---");
 
@@ -129,7 +124,7 @@ public class DeleteJobTest {
         js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", actionButton);
         Thread.sleep(1000);
         actionButton.click();
-        Thread.sleep(3000);
+        Thread.sleep(1500);
 
         if (option.equals("delete")) {
             verifyJobDeleted();
@@ -138,7 +133,6 @@ public class DeleteJobTest {
         }
     }
 
-    // Reopens modal in case it is closed
     private void reopenModalForJob() throws InterruptedException {
         List<WebElement> jobCards = driver.findElements(By.cssSelector("div.card:not(.add-job-card)"));
 
@@ -153,13 +147,13 @@ public class DeleteJobTest {
 
             if (title.equals(selectedJobTitle) && company.equals(selectedJobCompany) && location.equals(selectedJobLocation)) {
                 js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", card);
-                Thread.sleep(2000);
+                Thread.sleep(1500);
                 actions.moveToElement(card).pause(1000).perform();
-                Thread.sleep(2000);
+                Thread.sleep(1500);
 
                 WebElement deleteButton = card.findElement(By.cssSelector(".delete-btn"));
                 deleteButton.click();
-                Thread.sleep(2000);
+                Thread.sleep(1500);
                 return;
             }
         }
@@ -167,7 +161,6 @@ public class DeleteJobTest {
         throw new NoSuchElementException("Could not find matching job card to reopen modal.");
     }
 
-    // Verifies job is still visible (after cancel or close)
     private void verifyJobStillExists(String action) {
         System.out.println("Verifying job exists after action: " + action);
 
@@ -195,7 +188,6 @@ public class DeleteJobTest {
         }
     }
 
-    // Verifies job is deleted (after confirmation)
     private void verifyJobDeleted() {
         System.out.println("Verifying job has been deleted...");
 
@@ -228,7 +220,6 @@ public class DeleteJobTest {
         js.executeScript("window.scrollTo(0, 0)");
     }
 
-    // AfterEach
     public void teardown() {
         if (driver != null) {
             System.out.println("Closing browser...");
